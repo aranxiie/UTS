@@ -6,86 +6,62 @@
 <title>Philosophy MCQ — Instant Feedback</title>
 <style>
   :root {
-    --primary: #2563eb;
-    --correct: #16a34a;
-    --wrong: #dc2626;
-    --muted: #6b7280;
-    --card: #ffffff;
-    --bg: #f3f4f6;
+    --primary:#2563eb; --correct:#16a34a; --wrong:#dc2626; --muted:#6b7280;
+    --card:#ffffff; --bg:#f3f4f6;
   }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
-    background: var(--bg);
-    color: #111827;
-    display: grid;
-    place-items: center;
-    min-height: 100vh;
-    padding: 16px;
+  *{box-sizing:border-box}
+  body{
+    margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+    background:var(--bg);color:#111827;display:grid;place-items:center;min-height:100vh;padding:16px;
   }
-  .app {
-    width: min(900px, 100%);
-    background: var(--card);
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.08);
-    padding: clamp(16px, 3vw, 28px);
-  }
-  header {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; margin-bottom: 12px;
-  }
-  .title { font-weight: 800; letter-spacing: .2px; }
-  .pill {
-    font-size: 14px; color: #fff; background: var(--primary);
-    padding: 6px 10px; border-radius: 999px;
-  }
-  .bar { height: 8px; width: 100%; background: #e5e7eb; border-radius: 999px; overflow: hidden; }
-  .bar > span { display: block; height: 100%; width: 0%; background: var(--primary); transition: width .25s ease; }
+  .app{width:min(980px,100%);background:var(--card);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.08);padding:clamp(16px,3vw,28px)}
+  header{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap}
+  .title{font-weight:800}
+  .controls-top{display:flex;gap:10px;align-items:center}
+  select, .chk {border:1px solid #e5e7eb;border-radius:10px;padding:8px 10px;background:#fff;font-weight:600}
+  .pill{font-size:14px;color:#fff;background:var(--primary);padding:6px 10px;border-radius:999px}
+  .bar{height:8px;width:100%;background:#e5e7eb;border-radius:999px;overflow:hidden}
+  .bar>span{display:block;height:100%;width:0;background:var(--primary);transition:width .25s ease}
 
-  .card { margin-top: 16px; }
-  .qtext { font-size: clamp(18px, 2.2vw, 22px); line-height: 1.4; margin: 4px 0 14px; }
-  .choices { display: grid; gap: 10px; }
-  .choice {
-    width: 100%; text-align: left;
-    background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px;
-    padding: 12px 14px; cursor: pointer; transition: transform .03s ease, border-color .15s ease, background .15s ease;
+  .card{margin-top:16px}
+  .qtext{font-size:clamp(18px,2.2vw,22px);line-height:1.4;margin:4px 0 14px}
+  .choices{display:grid;gap:10px}
+  .choice{
+    text-align:left;background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;
+    padding:12px 14px;cursor:pointer;transition:transform .03s,border-color .15s,background .15s
   }
-  .choice:hover { transform: translateY(-1px); }
-  .choice[disabled] { opacity: .9; cursor: default; transform: none; }
-  .choice.correct { background: #ecfdf5; border-color: #86efac; }
-  .choice.wrong   { background: #fef2f2; border-color: #fecaca; }
-  .label {
-    font-weight: 700; width: 28px; height: 28px; display: inline-grid; place-items: center;
-    border-radius: 8px; margin-right: 10px; color: #111827; background: #e5e7eb;
-  }
-  .choice.correct .label { color: #065f46; background: #a7f3d0; }
-  .choice.wrong   .label { color: #7f1d1d; background: #fecaca; }
+  .choice:hover{transform:translateY(-1px)}
+  .choice[disabled]{opacity:.9;cursor:default;transform:none}
+  .choice.correct{background:#ecfdf5;border-color:#86efac}
+  .choice.wrong{background:#fef2f2;border-color:#fecaca}
+  .label{font-weight:700;width:28px;height:28px;display:inline-grid;place-items:center;border-radius:8px;margin-right:10px;background:#e5e7eb}
+  .choice.correct .label{color:#065f46;background:#a7f3d0}
+  .choice.wrong .label{color:#7f1d1d;background:#fecaca}
 
-  .feedback { min-height: 28px; margin-top: 8px; font-weight: 600; }
-  .feedback.correct { color: var(--correct); }
-  .feedback.wrong   { color: var(--wrong); }
+  .feedback{min-height:28px;margin-top:8px;font-weight:700}
+  .feedback.correct{color:var(--correct)}
+  .feedback.wrong{color:var(--wrong)}
+  .controls{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+  .btn{background:var(--primary);color:#fff;border:none;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer}
+  .btn.secondary{background:#1118270d;color:#111827}
+  .muted{color:var(--muted);font-size:14px}
 
-  .controls { margin-top: 12px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: space-between; align-items: center; }
-  .btn {
-    background: var(--primary); color: #fff; border: none; border-radius: 12px;
-    padding: 10px 14px; font-weight: 700; cursor: pointer;
-  }
-  .btn.secondary { background: #1118270d; color: #111827; }
-  .muted { color: var(--muted); font-size: 14px; }
-
-  .end {
-    text-align: center; padding: 22px 10px;
-  }
-  .score {
-    font-size: 22px; font-weight: 800; margin: 6px 0 2px;
-  }
+  .end{text-align:center;padding:22px 10px}
+  .score{font-size:22px;font-weight:800;margin:6px 0 2px}
 </style>
 </head>
 <body>
   <div class="app">
     <header>
       <div class="title">Philosophy Quiz — Instant Feedback</div>
+      <div class="controls-top">
+        <select id="setPicker" title="Choose question set">
+          <option value="core">Core Philosophers (50)</option>
+          <option value="psy">Psychoanalytic & Humanistic (50)</option>
+          <option value="revised">Revised Mixed Set (27)</option>
+        </select>
+        <label class="chk"><input type="checkbox" id="shuffleBox" checked /> Shuffle</label>
+      </div>
       <div class="pill"><span id="count">1</span>/<span id="total">50</span></div>
     </header>
     <div class="bar" aria-hidden="true"><span id="progress"></span></div>
@@ -97,7 +73,7 @@
       <div class="controls">
         <div class="muted" id="miniScore">Score: 0</div>
         <div>
-          <button class="btn secondary" id="revealBtn" title="Show the correct answer">Show Answer</button>
+          <button class="btn secondary" id="revealBtn">Show Answer</button>
           <button class="btn" id="nextBtn">Next ›</button>
         </div>
       </div>
@@ -106,16 +82,15 @@
     <section class="end" id="end" hidden>
       <div class="score" id="finalScore"></div>
       <div class="muted" id="summary"></div>
-      <div style="margin-top:14px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-        <button class="btn" id="retryAll">Restart All</button>
+      <div style="margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn" id="retryAll">Restart</button>
       </div>
     </section>
   </div>
 
 <script>
-/** QUESTIONS **/
-const DATA = [
-  // 1–30 (Philosophers & theories)
+/* ---------- DATA: Core Philosophers (previous set) ---------- */
+const CORE = [
   {q:"Who is the philosopher who valued an examined life and is known for the Socratic Method?", c:["Plato","Aristotle","Socrates","Augustine"], a:"c"},
   {q:"Which philosopher believed that the soul is immortal and the essence of the true self?", c:["Aristotle","Socrates","Aquinas","Plato"], a:"b"},
   {q:"The concept of the soul having three parts—rational, spirited, and appetitive—is attributed to:", c:["Socrates","Plato","Aristotle","Descartes"], a:"b"},
@@ -146,8 +121,6 @@ const DATA = [
   {q:"The idea that the self is not innate but emerges through social interaction is a core philosophy of:", c:["Rene Descartes","John Locke","George Mead","Socrates"], a:"c"},
   {q:"Which philosopher viewed the self as an illusion, with no permanent entity underlying our experiences?", c:["Plato","Rene Descartes","David Hume","Aristotle"], a:"c"},
   {q:"The philosopher who saw the self as a rational being distinct and separate from the physical body was:", c:["Aristotle","Rene Descartes","David Hume","John Locke"], a:"b"},
-
-  // 31–50 (General concepts)
   {q:"According to the slides, understanding the self is especially important for college students because it is a critical period of:", c:["Career advancement","Financial independence","Identity formation and personal growth","Social relaxation"], a:"c"},
   {q:"The ability to make better choices and judgments is referred to as:", c:["Identity Development","Improved Decision-Making","Authentic Relationships","Emotional Resilience"], a:"b"},
   {q:"In Kierkegaard's \"Stages of Life,\" the stage focused on living for pleasure and avoiding responsibility is the:", c:["Ethical Stage","Religious Stage","Authentic Stage","Aesthetic Stage"], a:"d"},
@@ -170,73 +143,164 @@ const DATA = [
   {q:"Heidegger’s concept of \"Being-in-the-World\" means that we are:", c:["Trapped in a physical body","A thinking substance separate from the world","A bundle of perceptions","Never separate from the world we exist in"], a:"d"},
 ];
 
-/** QUIZ ENGINE **/
-const total = DATA.length;
-let i = 0;
-let score = 0;
+/* ---------- DATA: Psychoanalytic & Humanistic (your new set) ---------- */
+const PSY = [
+  {q:"Who developed the psychoanalytic theory that personality consists of the id, the ego, and the superego?", c:["Carl Rogers","Donald Winnicott","Sigmund Freud","Shavelson, Hubner, and Stanton"], a:"c"},
+  {q:"According to Freud, which part of the personality is present from birth and operates completely unconsciously?", c:["The Ego","The Superego","The Conscience","The Id"], a:"d"},
+  {q:"The id is driven by the \"pleasure principle,\" which is the need to:", c:["Follow societal rules and norms","Seek pleasure and avoid pain without consequence","Mediate between desires and reality","Strive for perfection and moral ideals"], a:"b"},
+  {q:"Which part of the personality develops to mediate between the unrealistic id and the external real world?", c:["The Ego","The Superego","The Id","The Ego Ideal"], a:"a"},
+  {q:"The ego operates according to the:", c:["Pleasure principle","Moral principle","Reality principle","Perfection principle"], a:"c"},
+  {q:"The internal sense of right and wrong, formed from the values of parents and society, is the:", c:["Id","Ego","Superego","Real Self"], a:"c"},
+  {q:"The superego consists of two parts: the ego ideal and the:", c:["Conscience","Unconscious","Preconscious","Defense mechanism"], a:"a"},
+  {q:"In Freud's theory, the component that punishes you with feelings of guilt is the:", c:["Ego Ideal","Id","Ego","Conscience"], a:"d"},
+  {q:"Which of the following is listed as a criticism of Freud's theory?", c:["It is too focused on the conscious mind","It is too simple to explain personality","Many parts cannot be tested scientifically","It gives too much power to the superego"], a:"c"},
+  {q:"The ego ideal is the part of the superego that:", c:["Causes anxiety and tension","Seeks immediate gratification","Rewards you with pride for good behavior","Operates on the pleasure principle"], a:"c"},
+  {q:"Which psychologist is associated with the Humanistic Theory of the Self, focusing on the Real Self and Ideal Self?", c:["Sigmund Freud","Donald Winnicott","Carl Rogers","Lev Vygotsky"], a:"c"},
+  {q:"The Humanistic Theory believes that people are naturally good and motivated to:", c:["Follow the pleasure principle","Develop a strong superego","Reach their full potential","Suppress their true feelings"], a:"c"},
+  {q:"In Rogers' theory, the \"Real Self\" refers to:", c:["The person you wish you could be","The perfect version of yourself","Who you actually are in the present moment","The self that is disconnected from emotions"], a:"c"},
+  {q:"The person you would like to be or aspire to become is known as the:", c:["Real Self","Ideal Self","True Self","False Self"], a:"b"},
+  {q:"Which of the following is NOT listed as an influence on the Ideal Self?", c:["Parental expectations","Societal standards","The pleasure principle","Media influences"], a:"c"},
+  {q:"When there is a close match or consistency between your real self and your ideal self, you experience:", c:["Incongruence","Congruence","Self-actualization","Internal conflict"], a:"b"},
+  {q:"Low self-esteem, anxiety, and emotional distress are potential outcomes of:", c:["Congruence","A strong ego","Self-acceptance","Incongruence"], a:"d"},
+  {q:"According to Rogers, the innate drive to realize one's full potential and become the best version of oneself is called:", c:["The reality principle","Self-actualization","Congruence","The ego ideal"], a:"b"},
+  {q:"High congruence is associated with:", c:["Greater self-worth and self-acceptance","A tendency to distort experiences","Feeling \"never good enough\"","A dominant false self"], a:"a"},
+  {q:"The Venn diagrams in the presentation show that congruence is when the Perceived Self and Ideal Self:", c:["Have no overlap","Are in conflict","Have a significant overlap","Are identical"], a:"c"},
+  {q:"Who was the British pediatrician and psychoanalyst who developed the concepts of the True Self and False Self?", c:["Carl Rogers","Sigmund Freud","Lev Vygotsky","Donald Winnicott"], a:"d"},
+  {q:"According to Winnicott, the \"True Self\" is your:", c:["Defensive mask","Internal moral compass","Authentic, spontaneous, and uninhibited core","Vision of the \"perfect\" you"], a:"c"},
+  {q:"The True Self flourishes when an infant experiences what Winnicott called a:", c:["\"Good enough mother\"","Strong superego","State of congruence","Pleasure principle"], a:"a"},
+  {q:"The \"False Self\" is described as a defensive facade or mask developed to:", c:["Achieve self-actualization","Satisfy the id's desires","Protect the vulnerable True Self","Experience congruence"], a:"c"},
+  {q:"According to Winnicott, the False Self emerges when a caregiver is:", c:["Consistently responsive and mirroring","\"Good enough\"","Consistently unresponsive or intrusive","Encouraging spontaneity"], a:"c"},
+  {q:"The \"Healthy False Self\" is considered:", c:["A sign of deep psychological problems","A necessary and adaptive part of social life","The complete overshadowing of the True Self","A result of perfect parenting"], a:"b"},
+  {q:"A person living almost entirely based on external expectations, feeling disconnected from their genuine feelings, is exhibiting a:", c:["Pathological False Self","Healthy False Self","True Self","Congruent Self"], a:"a"},
+  {q:"The model that proposes an individual's self-concept is largely a unified, overarching, and consistent view of themselves is the:", c:["Differentiated Model of Self","Global Model of Self","Psychoanalytic Model of Self","Humanistic Model of Self"], a:"b"},
+  {q:"The idea that the self is composed of multiple, distinct \"selves\" that vary depending on the context or role is known as the:", c:["Global Model of Self","Monolithic Model of Self","Differentiated Model of Self","Unified Model of Self"], a:"c"},
+  {q:"Shavelson, Hubner, and Stanton (1976) are associated with the idea that self-concept is:", c:["Entirely genetic","A single, unchanging entity","Multidimensional, contributing to a general self-concept","Composed of only a True and False self"], a:"c"},
+  {q:"An example of the id in action would be:", c:["Resisting peer pressure to do something wrong","Sharing your food with a hungry friend","Immediately eating a cookie you see, without thinking","Saving money for a long-term goal"], a:"c"},
+  {q:"The ego's job is to:", c:["Generate feelings of guilt and pride","Satisfy the id's impulses in a realistic and socially acceptable way","Seek immediate pleasure regardless of the situation","Create a perfect vision of the self to aspire to"], a:"b"},
+  {q:"Adherence to laws, rules, and cultural traditions is an example of the influence of the:", c:["Id","Ego","Superego","Real Self"], a:"c"},
+  {q:"Rogers' concept of the \"Real Self\" is most similar to Winnicott's concept of the:", c:["False Self","Pathological Self","True Self","Ego Ideal"], a:"c"},
+  {q:"A person who is a tough negotiator at work but a gentle parent at home, without feeling fake, is an example of a:", c:["Global Self","Pathological False Self","Differentiated Self","High level of incongruence"], a:"c"},
+  {q:"A tendency to distort or deny experiences that contradict your self-concept is a symptom of:", c:["A strong Ego","Congruence","Incongruence","A Healthy False Self"], a:"c"},
+  {q:"According to Winnicott, a baby crying when hungry is a pure expression of the:", c:["Id","False Self","Superego","True Self"], a:"d"},
+  {q:"The development of the False Self is primarily a strategy to avoid:", c:["Pleasure","Reality","Rejection, punishment, or abandonment","Self-actualization"], a:"c"},
+  {q:"Being polite and following social norms in situations where full spontaneity is inappropriate is a function of the:", c:["Pathological False Self","Id","Healthy False Self","True Self"], a:"c"},
+  {q:"Carl Rogers' core self-concept (self-image) can be seen as having a:", c:["Global dimension","Differentiated dimension","Pathological dimension","Psychoanalytic dimension"], a:"a"},
+  {q:"Which of these develops last, according to Freud's timeline?", c:["The Id","The Ego","The Superego","The Unconscious"], a:"c"},
+  {q:"Which theory focuses on internal conflict between mental forces?", c:["Rogers' Humanistic Theory","Freud's Psychoanalytic Theory","Winnicott's True/False Self Theory","The Global Model of Self"], a:"b"},
+  {q:"A person who generally feels competent and likable, even after a temporary failure, is demonstrating a:", c:["High global self-concept","Differentiated self","Pathological false self","Strong id"], a:"a"},
+  {q:"The emphasis on fluidity and multiplicity of self-representations is central to:", c:["Differentiated Models of Self","The Global Model of Self","Freud's Theory","Winnicott's Theory"], a:"a"},
+  {q:"Which of the following is NOT a characteristic of the id?", c:["It is present from birth","It is rational and realistic","It operates unconsciously","It seeks immediate gratification"], a:"b"},
+  {q:"\"Authenticity and feeling true to yourself\" is an outcome of:", c:["A strong superego","The False Self","Incongruence","Congruence"], a:"d"},
+  {q:"A \"holding environment,\" according to Winnicott, is:", c:["A strict environment that teaches rules","An environment where the infant feels safe and their expressions are accepted","A place where the False Self can develop without harm","The conscious part of the mind that holds back the id"], a:"b"},
+  {q:"In Freud's theory, the ego is partly conscious and partly:", c:["Preconscious","Unconscious","Subconscious","Postconscious"], a:"b"},
+  {q:"The \"perfect you\" that is influenced by media and societal standards is part of Rogers':", c:["Real Self","Ideal Self","True Self","Actualized Self"], a:"b"},
+  {q:"Which theorist would be most likely to agree with the statement, \"Our sense of self is deeply shaped by the care we receive from our primary caregivers as infants\"?", c:["Carl Rogers","Sigmund Freud","Donald Winnicott","Shavelson, Hubner, and Stanton"], a:"c"},
+];
+/* ---------- DATA: Rephrased / Revised Set ---------- */
+const REVISED = [
+  {q:"Who is the Ancient Greek philosopher who famously stated, \"Know thyself\" and believed the soul is immortal?", c:["Plato","Aristotle","Heraclitus","Socrates"], a:"d"},
+  {q:"The concept of the soul having three parts—rational, spirited, and appetitive—is attributed to:", c:["Aristotle","Plato","Socrates","Aquinas"], a:"b"},
+  {q:"Which philosopher argued that the soul is the \"form\" of the body, making the soul and body inseparable?", c:["Plato","Aristotle","Descartes","Augustine"], a:"b"},
+  {q:"This medieval thinker believed the self is a rational soul united with the body and that knowledge comes from both reason and faith.", c:["Augustine","Aquinas","Plato","Socrates"], a:"b"},
+  {q:"The rationalist who declared, \"I think, therefore I am\" (Cogito, ergo sum) and proposed dualism was:", c:["John Locke","David Hume","Rene Descartes","Immanuel Kant"], a:"c"},
+  {q:"The empiricist who viewed the mind as a tabula rasa (blank slate) and defined the self through consciousness and memory was:", c:["Rene Descartes","David Hume","John Locke","George Mead"], a:"c"},
+  {q:"Who argued that the self is an illusion, proposing the \"Bundle Theory\" where the self is merely a collection of perceptions?", c:["John Locke","David Hume","Søren Kierkegaard","Martin Heidegger"], a:"b"},
+  {q:"The existentialist who described the self as a task to be achieved and outlined the three stages of life (Aesthetic, Ethical, Religious) was:", c:["Martin Heidegger","Søren Kierkegaard","Jean-Paul Sartre","Rene Descartes"], a:"b"},
+  {q:"The concept of Dasein (\"being-there\") and the importance of Authenticity was central to:", c:["Søren Kierkegaard","Martin Heidegger","George Mead","Charles Horton Cooley"], a:"b"},
+  {q:"This sociologist is known for the theory of the Social Self, arguing that the self emerges through social interaction.", c:["Charles Horton Cooley","George Mead","Lev Vygotsky","Sigmund Freud"], a:"b"},
+  {q:"The idea of the Looking-Glass Self, where our self-concept reflects how we think others see us, was developed by:", c:["George Mead","Charles Horton Cooley","Hans-Georg Gadamer","Sigmund Freud"], a:"b"},
+  {q:"The psychoanalyst who structured personality into the id, ego, and superego was:", c:["Carl Rogers","Donald Winnicott","Sigmund Freud","Carl Jung"], a:"c"},
+  {q:"The founder of the Humanistic person-centered approach, focusing on the Real Self, Ideal Self, and Congruence, was:", c:["Sigmund Freud","Donald Winnicott","Abraham Maslow","Carl Rogers"], a:"d"},
+  {q:"Who developed the concepts of the True Self and False Self, based on early childhood experiences?", c:["Sigmund Freud","Carl Rogers","Donald Winnicott","George Mead"], a:"c"},
+  {q:"This philosopher emphasized introspection and believed that people are made in God's image (imago Dei).", c:["Aquinas","Augustine","Aristotle","Plato"], a:"b"},
+  {q:"The social constructivist who argued that the self is formed through language, symbols, and shared meanings was:", c:["Richard Shweder","Charles Horton Cooley","Lev Vygotsky","George Mead"], a:"c"},
+  {q:"This cultural psychologist argued that Western cultures emphasize independence while Eastern cultures emphasize interdependence.", c:["Lev Vygotsky","Richard Shweder","Hans-Georg Gadamer","George Mead"], a:"b"},
+  {q:"Who proposed hermeneutics: that we understand ourselves through cultural traditions and historical contexts?", c:["Martin Heidegger","Søren Kierkegaard","Hans-Georg Gadamer","David Hume"], a:"c"},
+  {q:"The idea of the generalized other, an internalized sense of societal norms, comes from:", c:["Charles Horton Cooley","George Mead","Sigmund Freud","Carl Rogers"], a:"b"},
+  {q:"The concept of the pleasure principle is central to the work of:", c:["Carl Rogers","B.F. Skinner","Sigmund Freud","Donald Winnicott"], a:"c"},
+  {q:"Who believed that a good enough mother was crucial for the development of the True Self?", c:["Carl Rogers","Sigmund Freud","Erik Erikson","Donald Winnicott"], a:"d"},
+  {q:"The theory of self-actualization as an innate drive to reach one’s full potential is a key concept for:", c:["Sigmund Freud","Carl Rogers","David Hume","Plato"], a:"b"},
+  {q:"Who would argue that the self is not innate but arises from taking the role of the other?", c:["Rene Descartes","John Locke","George Mead","Socrates"], a:"c"},
+  {q:"The philosopher who stressed well-being as the goal of life and saw humans as unique for their capacity to reason was:", c:["Socrates","Plato","Aristotle","Aquinas"], a:"c"},
+  {q:"The concept of incongruence, a mismatch between the real and ideal self, was proposed by:", c:["Sigmund Freud","Donald Winnicott","Carl Rogers","Martin Heidegger"], a:"c"},
+  {q:"Who likened the mind to a theater where perceptions constantly appear and disappear?", c:["John Locke","David Hume","Rene Descartes","George Mead"], a:"b"},
+  {q:"The division of the self into the I (spontaneous) and the Me (socialized) is the work of:", c:["George Mead","Charles Horton Cooley","Lev Vygotsky","Hans-Georg Gadamer"], a:"a"},
+];
+
+/* ---------- QUIZ ENGINE ---------- */
+const SETS = { core: CORE, psy: PSY, revised: REVISED };
+
+let POOL = CORE.slice();
+let i = 0, score = 0;
 
 const elQ  = document.getElementById("qtext");
 const elC  = document.getElementById("choices");
 const elFb = document.getElementById("feedback");
 const elNext = document.getElementById("nextBtn");
 const elReveal = document.getElementById("revealBtn");
-
 const elCount = document.getElementById("count");
 const elTotal = document.getElementById("total");
 const elProg  = document.getElementById("progress");
 const elMini  = document.getElementById("miniScore");
-
 const endSection = document.getElementById("end");
 const quizSection = document.getElementById("quiz");
 const finalScore = document.getElementById("finalScore");
 const summary = document.getElementById("summary");
 const retryAll = document.getElementById("retryAll");
+const setPicker = document.getElementById("setPicker");
+const shuffleBox = document.getElementById("shuffleBox");
 
-elTotal.textContent = total;
+function letter(idx){ return ["a","b","c","d"][idx]; }
+function idxFromLetter(ch){ return {a:0,b:1,c:2,d:3}[ch]; }
 
-function letter(index){ return ["a","b","c","d"][index]; }
-function indexFromLetter(ch){ return {a:0,b:1,c:2,d:3}[ch]; }
+function shuffle(arr){
+  for(let j=arr.length-1; j>0; j--){ const k=Math.floor(Math.random()*(j+1)); [arr[j],arr[k]]=[arr[k],arr[j]]; }
+  return arr;
+}
 
-function render() {
-  const {q, c, a} = DATA[i];
+function start(setKey){
+  POOL = SETS[setKey].slice();
+  if (shuffleBox.checked) shuffle(POOL);
+  i = 0; score = 0;
+  elTotal.textContent = POOL.length;
+  elProg.style.width = "0%";
+  endSection.hidden = true; quizSection.hidden = false;
+  render();
+}
+
+function render(){
+  const {q, c, a} = POOL[i];
   elQ.textContent = `${i+1}. ${q}`;
-  elC.innerHTML = "";
-  elFb.textContent = "";
-  elFb.className = "feedback";
+  elC.innerHTML = ""; elFb.textContent = ""; elFb.className = "feedback";
   elCount.textContent = i+1;
-  elProg.style.width = `${(i)/total*100}%`;
+  elProg.style.width = `${(i)/POOL.length*100}%`;
   elMini.textContent = `Score: ${score}`;
 
   c.forEach((text, idx) => {
     const btn = document.createElement("button");
     btn.className = "choice";
     btn.innerHTML = `<span class="label">${letter(idx)})</span> ${text}`;
-    btn.onclick = () => choose(idx, indexFromLetter(a));
+    btn.onclick = () => choose(idx, idxFromLetter(a));
     elC.appendChild(btn);
   });
 
   elNext.disabled = true;
 }
 
-function disableChoices() {
-  [...elC.children].forEach(b => b.disabled = true);
-}
-
-function choose(selectedIdx, correctIdx) {
-  // mark all
+function choose(selectedIdx, correctIdx){
   [...elC.children].forEach((b, idx) => {
     b.disabled = true;
     if (idx === correctIdx) b.classList.add("correct");
   });
 
-  const chosenBtn = elC.children[selectedIdx];
-  if (selectedIdx === correctIdx) {
+  const chosen = elC.children[selectedIdx];
+  if (selectedIdx === correctIdx){
     elFb.textContent = "Correct!";
     elFb.classList.add("correct");
     score++;
   } else {
-    chosenBtn.classList.add("wrong");
-    const correctText = DATA[i].c[correctIdx];
+    chosen.classList.add("wrong");
+    const correctText = POOL[i].c[correctIdx];
     elFb.textContent = `Wrong. Correct answer: (${letter(correctIdx)}) ${correctText}`;
     elFb.classList.add("wrong");
   }
@@ -245,43 +309,27 @@ function choose(selectedIdx, correctIdx) {
 }
 
 elReveal.addEventListener("click", () => {
-  // If already revealed/answered do nothing
   if ([...elC.children].some(b => b.disabled)) return;
-  const correctIdx = indexFromLetter(DATA[i].a);
-  choose(correctIdx, correctIdx); // treat as picking the correct one
+  const correctIdx = idxFromLetter(POOL[i].a);
+  choose(correctIdx, correctIdx);
 });
 
 elNext.addEventListener("click", () => {
-  if (i < total - 1) {
-    i++;
-    render();
+  if (i < POOL.length - 1){
+    i++; render();
   } else {
-    // finish
     elProg.style.width = "100%";
-    quizSection.hidden = true;
-    endSection.hidden = false;
-    finalScore.textContent = `Final Score: ${score} / ${total}`;
-    const pct = Math.round((score/total)*100);
-    summary.textContent = `You answered ${score} correctly and ${total-score} incorrectly (${pct}%).`;
+    quizSection.hidden = true; endSection.hidden = false;
+    finalScore.textContent = `Final Score: ${score} / ${POOL.length}`;
+    const pct = Math.round((score/POOL.length)*100);
+    summary.textContent = `You answered ${score} correctly and ${POOL.length-score} incorrectly (${pct}%).`;
   }
 });
 
-retryAll.addEventListener("click", () => {
-  i = 0; score = 0;
-  quizSection.hidden = false;
-  endSection.hidden = true;
-  render();
-});
+retryAll.addEventListener("click", () => start(setPicker.value));
+setPicker.addEventListener("change", () => start(setPicker.value));
 
-// Optional: shuffle questions for variety (comment out to keep fixed order)
-(function shuffle() {
-  for (let j = DATA.length - 1; j > 0; j--) {
-    const k = Math.floor(Math.random() * (j + 1));
-    [DATA[j], DATA[k]] = [DATA[k], DATA[j]];
-  }
-})();
-
-render();
+start(setPicker.value);
 </script>
 </body>
 </html>
