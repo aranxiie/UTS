@@ -58,6 +58,7 @@
         <select id="setPicker" title="Choose question set">
           <option value="core">Core Philosophers (50)</option>
           <option value="psy">Psychoanalytic & Humanistic (50)</option>
+          <option value="eastwest">Western & Eastern Concepts of the Self (50)</option>
           <option value="revised">Revised Mixed Set (27)</option>
         </select>
         <label class="chk"><input type="checkbox" id="shuffleBox" checked /> Shuffle</label>
@@ -227,8 +228,63 @@ const REVISED = [
   {q:"The division of the self into the I (spontaneous) and the Me (socialized) is the work of:", c:["George Mead","Charles Horton Cooley","Lev Vygotsky","Hans-Georg Gadamer"], a:"a"},
 ];
 
+  ------- DATA: Western & Eastern Concepts of the Self (new set) ---------- */
+    const EASTWEST = [
+      {q:"The Western concept of the self is best described by which term?", c:["Collectivism","Individualism","Relationalism","Illusionism"], a:"b"},
+      {q:"In the Western view, the self is seen as self-governing, with free will and independence. This characteristic is called:", c:["Rational","Continuous","Autonomous","Individualistic"], a:"c"},
+      {q:"The ability of the self to maintain its identity over time through memory and experience is referred to as being:", c:["Rational","Continuous","Autonomous","Introspective"], a:"b"},
+      {q:"The Eastern concept of the self typically understands it as:", c:["Autonomous, individual, and enduring","Separate from others and society","Interconnected, impermanent, and often illusory","Rational and capable of logic"], a:"c"},
+      {q:"According to the Eastern view, the idea of a fixed, separate, personal identity is ultimately a:", c:["Divine essence","Mental construction","Rational capability","Lifelong goal"], a:"b"},
+      {q:"Which philosophy teaches that the self is an illusion and does not truly exist in a fixed, independent way?", c:["Buddhism","Confucianism","Taoism","Hinduism"], a:"a"},
+      {q:"The central Buddhist doctrine of \"No-Self\" or \"non-soul\" is called:", c:["Dukkha","Anicca","Anatta","Nirvana"], a:"c"},
+      {q:"In Buddhism, the \"self\" is considered a temporary collection of five components known as:", c:["The Tao","The Junzi","The aggregates (skandhas)","The Brahman"], a:"c"},
+      {q:"Which of the following is NOT one of the five aggregates in Buddhism?", c:["Form (physical body)","Sensation (feelings)","Karma (actions)","Consciousness (awareness)"], a:"c"},
+      {q:"The Buddhist concept that everything in existence is in a state of constant change is:", c:["Anatta","Dukkha","Anicca","Nirvana"], a:"c"},
+      {q:"According to Buddhism, clinging to the idea of a fixed, permanent self leads to:", c:["Liberation","Suffering (Dukkha)","Harmony","Enlightenment"], a:"b"},
+      {q:"The ultimate goal in Buddhism is to attain liberation from suffering, which is known as:", c:["Samsāra","Moksha","Nirvana","Tao"], a:"c"},
+      {q:"In Confucianism, the self is primarily defined by:", c:["Its eternal, divine essence","The underlying flow of the universe","Its status as an autonomous individual","Its relationships within family and society"], a:"d"},
+      {q:"The ideal person in Confucianism, also known as the \"noble person\" or \"gentleman,\" is the:", c:["Ātman","Bodhisattva","Sage","Junzi"], a:"d"},
+      {q:"Which philosophy emphasizes that the self is not born perfect but must be cultivated through learning and moral effort?", c:["Taoism","Buddhism","Confucianism","Hinduism"], a:"c"},
+      {q:"The idea of \"self-cultivation\" as a lifelong process of refinement through study and ethical action is central to:", c:["Taoism","Confucianism","Buddhism","Hinduism"], a:"b"},
+      {q:"Which philosophy most strongly emphasizes social harmony over individual freedom?", c:["Confucianism","Taoism","Buddhism","The Western view"], a:"a"},
+      {q:"In Taoism, the self should be in harmony with the \"Tao,\" which is the:", c:["Cycle of rebirth","Eternal soul","Underlying way or flow of the universe","Set of social relationships"], a:"c"},
+      {q:"The Taoist concept of \"effortless action\" or acting without force is known as:", c:["Junzi","Anatta","Wu Wei","Dukkha"], a:"c"},
+      {q:"In Taoism, the ego or socially constructed identity is viewed as:", c:["The true self","Something to be cultivated","Artificial and limiting","The source of moral guidance"], a:"c"},
+      {q:"The ideal self in Taoism is often compared to which element for being soft, adaptable, and without fixed form?", c:["Fire","Earth","Metal","Water"], a:"d"},
+      {q:"Taoism teaches that instead of trying to build or fix the self, one should:", c:["Fulfill social roles perfectly","Analyze the self through introspection","Let go of ego and live simply","Strive to achieve a higher rebirth"], a:"c"},
+      {q:"Which philosophy sees the self as open, undefined, and ever-changing?", c:["Taoism","The Western view","Hinduism","Confucianism"], a:"a"},
+      {q:"In Hinduism, the eternal, divine, and unchanging essence of a person is called the:", c:["Brahman","Ātman","Karma","Moksha"], a:"b"},
+      {q:"The absolute, infinite, universal reality behind the universe in Hinduism is known as:", c:["Brahman","Ātman","Samsāra","Moksha"], a:"a"},
+      {q:"The highest realization in Hinduism is that the Ātman is not separate from the:", c:["Body and mind","Brahman","Social roles","Five aggregates"], a:"b"},
+      {q:"The cycle of birth, death, and rebirth in Hinduism is called:", c:["Moksha","Karma","Samsāra","Nirvana"], a:"c"},
+      {q:"What determines the nature of one's reincarnation in Hinduism?", c:["The Tao","Social harmony","Karma","Anatta"], a:"c"},
+      {q:"The ultimate goal in Hinduism, which is liberation from the cycle of rebirth, is called:", c:["Nirvana","Moksha","Dukkha","Junzi"], a:"b"},
+      {q:"According to Hinduism, the Ātman is:", c:["Temporary and subject to change","An illusion","A collection of changing elements","Eternal, unchanging, and indestructible"], a:"d"},
+      {q:"The Western view emphasizes the self's ability to examine itself through inner reflection, a process known as:", c:["Autonomy","Rationality","Introspection","Collectivism"], a:"c"},
+      {q:"The Eastern view describes the self as \"impermanent,\" which directly relates to the Buddhist concept of:", c:["Anatta","Anicca","Dukkha","Nirvana"], a:"b"},
+      {q:"The Confucian self is a \"Relational Self\" because:", c:["It relates to the Tao","It is an illusion","Its identity is shaped by social roles","It is separate from others"], a:"c"},
+      {q:"A key difference between the Hindu and Buddhist views is that Hinduism posits an eternal soul (Ātman), while Buddhism posits:", c:["A social self","A cultivated self","No-soul (Anatta)","An individual self"], a:"c"},
+      {q:"Living simply, being humble, and seeking inner stillness are values primarily associated with:", c:["Confucianism","The Western view","Taoism","Hinduism"], a:"c"},
+      {q:"The five aggregates in Buddhism include \"Form,\" which refers to:", c:["The physical body and senses","Thoughts and emotions","Recognition and labeling","Feelings of pleasure or pain"], a:"a"},
+      {q:"Personal fulfillment through contributing to the well-being of one's family and community is a central idea in:", c:["Taoism","Buddhism","Confucianism","Hinduism"], a:"c"},
+      {q:"The idea that the Tao \"must be followed through non-resistance\" is a core tenet of:", c:["Confucianism","Taoism","Buddhism","Hinduism"], a:"b"},
+      {q:"Which of the following is NOT a method for achieving Moksha in Hinduism?", c:["Self-knowledge","Devotion","Abandoning all social roles","Meditation"], a:"c"},
+      {q:"The Western self is seen as an \"enduring entity,\" which contrasts with the Taoist view of the self as:", c:["Moral and ethical","Rational","Fluid and undefined","Relational"], a:"c"},
+      {q:"The Buddhist idea that we suffer because we try to protect something that doesn't truly exist aligns with its teaching that the self is:", c:["An illusion","Eternal","A social construct","The source of harmony"], a:"a"},
+      {q:"A person who believes their primary duty is to be a good son, a loyal friend, and an honorable employee is embodying the ideals of:", c:["Taoism","Buddhism","Confucianism","The Western view"], a:"c"},
+      {q:"The \"Universal Self\" is a term used in Hinduism to describe:", c:["Ātman","Brahman","Karma","Samsāra"], a:"b"},
+      {q:"\"Emptiness\" is valued in Taoism because it:", c:["Leads to suffering","Allows one to be open to the Tao","Is a sign of a strong ego","Fulfills social obligations"], a:"b"},
+      {q:"If the Western self is autonomous, the Confucian self is:", c:["Illusory","Divine","Relational","Spontaneous"], a:"c"},
+      {q:"The concept of \"rebirth\" or \"reincarnation\" is central to which two philosophies?", c:["Buddhism and Confucianism","Hinduism and Buddhism","Taoism and Confucianism","The Western view and Taoism"], a:"b"},
+      {q:"The idea that the self is a \"temporary collection of changing elements\" is from:", c:["Confucianism","Buddhism","Taoism","Hinduism"], a:"b"},
+      {q:"Fulfilling social roles with integrity and responsibility is the path to the fullest expression of the self in:", c:["Confucianism","Taoism","Buddhism","The Western view"], a:"a"},
+      {q:"The Hindu belief in an unchanging Ātman is most directly opposite to the Buddhist doctrine of:", c:["Dukkha (Suffering)","Anicca (Impermanence)","Karma","Samsāra"], a:"b"},
+      {q:"An individual who prioritizes personal freedom, independence, and self-reflection is most aligned with:", c:["The Eastern concept of the self","The Confucian concept of the self","The Taoist concept of the self","The Western concept of the self"], a:"d"},
+    ];
+
+
 /* ---------- QUIZ ENGINE ---------- */
-const SETS = { core: CORE, psy: PSY, revised: REVISED };
+const SETS = { core: CORE, psy: PSY, revised: REVISED, eastwest: EASTWEST };
 
 let POOL = CORE.slice();
 let i = 0, score = 0;
