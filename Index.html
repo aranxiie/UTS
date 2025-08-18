@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Philosophy MCQ — Instant Feedback</title>
+<style>
+  :root {
+    --primary: #2563eb;
+    --correct: #16a34a;
+    --wrong: #dc2626;
+    --muted: #6b7280;
+    --card: #ffffff;
+    --bg: #f3f4f6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+    background: var(--bg);
+    color: #111827;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    padding: 16px;
+  }
+  .app {
+    width: min(900px, 100%);
+    background: var(--card);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    padding: clamp(16px, 3vw, 28px);
+  }
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; margin-bottom: 12px;
+  }
+  .title { font-weight: 800; letter-spacing: .2px; }
+  .pill {
+    font-size: 14px; color: #fff; background: var(--primary);
+    padding: 6px 10px; border-radius: 999px;
+  }
+  .bar { height: 8px; width: 100%; background: #e5e7eb; border-radius: 999px; overflow: hidden; }
+  .bar > span { display: block; height: 100%; width: 0%; background: var(--primary); transition: width .25s ease; }
+
+  .card { margin-top: 16px; }
+  .qtext { font-size: clamp(18px, 2.2vw, 22px); line-height: 1.4; margin: 4px 0 14px; }
+  .choices { display: grid; gap: 10px; }
+  .choice {
+    width: 100%; text-align: left;
+    background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px;
+    padding: 12px 14px; cursor: pointer; transition: transform .03s ease, border-color .15s ease, background .15s ease;
+  }
+  .choice:hover { transform: translateY(-1px); }
+  .choice[disabled] { opacity: .9; cursor: default; transform: none; }
+  .choice.correct { background: #ecfdf5; border-color: #86efac; }
+  .choice.wrong   { background: #fef2f2; border-color: #fecaca; }
+  .label {
+    font-weight: 700; width: 28px; height: 28px; display: inline-grid; place-items: center;
+    border-radius: 8px; margin-right: 10px; color: #111827; background: #e5e7eb;
+  }
+  .choice.correct .label { color: #065f46; background: #a7f3d0; }
+  .choice.wrong   .label { color: #7f1d1d; background: #fecaca; }
+
+  .feedback { min-height: 28px; margin-top: 8px; font-weight: 600; }
+  .feedback.correct { color: var(--correct); }
+  .feedback.wrong   { color: var(--wrong); }
+
+  .controls { margin-top: 12px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: space-between; align-items: center; }
+  .btn {
+    background: var(--primary); color: #fff; border: none; border-radius: 12px;
+    padding: 10px 14px; font-weight: 700; cursor: pointer;
+  }
+  .btn.secondary { background: #1118270d; color: #111827; }
+  .muted { color: var(--muted); font-size: 14px; }
+
+  .end {
+    text-align: center; padding: 22px 10px;
+  }
+  .score {
+    font-size: 22px; font-weight: 800; margin: 6px 0 2px;
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="title">Philosophy Quiz — Instant Feedback</div>
+      <div class="pill"><span id="count">1</span>/<span id="total">50</span></div>
+    </header>
+    <div class="bar" aria-hidden="true"><span id="progress"></span></div>
+
+    <section class="card" id="quiz">
+      <div class="qtext" id="qtext"></div>
+      <div class="choices" id="choices"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="controls">
+        <div class="muted" id="miniScore">Score: 0</div>
+        <div>
+          <button class="btn secondary" id="revealBtn" title="Show the correct answer">Show Answer</button>
+          <button class="btn" id="nextBtn">Next ›</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="end" id="end" hidden>
+      <div class="score" id="finalScore"></div>
+      <div class="muted" id="summary"></div>
+      <div style="margin-top:14px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+        <button class="btn" id="retryAll">Restart All</button>
+      </div>
+    </section>
+  </div>
+
+<script>
+/** QUESTIONS **/
+const DATA = [
+  // 1–30 (Philosophers & theories)
+  {q:"Who is the philosopher who valued an examined life and is known for the Socratic Method?", c:["Plato","Aristotle","Socrates","Augustine"], a:"c"},
+  {q:"Which philosopher believed that the soul is immortal and the essence of the true self?", c:["Aristotle","Socrates","Aquinas","Plato"], a:"b"},
+  {q:"The concept of the soul having three parts—rational, spirited, and appetitive—is attributed to:", c:["Socrates","Plato","Aristotle","Descartes"], a:"b"},
+  {q:"According to Plato, the soul is temporarily trapped in the physical body and needs to escape to reach the realm of:", c:["Forms and true knowledge","Well-being","God","Consciousness"], a:"a"},
+  {q:"This philosopher stressed that humans are unique for their capacity to reason and that \"well-being\" is the goal of human life.", c:["Plato","Socrates","Aristotle","Locke"], a:"c"},
+  {q:"Who argued that the soul is the \"form\" of the body, meaning the soul and body are inseparable?", c:["Aristotle","Descartes","Plato","Augustine"], a:"a"},
+  {q:"Which thinker from the Middle Ages believed that the self is made up of a soul (form) and body (matter)?", c:["Augustine","Aquinas","Socrates","Heidegger"], a:"b"},
+  {q:"According to Aquinas, the soul serves three purposes:", c:["Appetitive, Spirited, Rational","Rational, Sensitive, Vegetative","Thinking, Doubting, Existing","Aesthetic, Ethical, Religious"], a:"b"},
+  {q:"This philosopher believed that people are essentially spiritual beings who can have a direct relationship with God and are made in God's image (imago Dei).", c:["Aquinas","Kierkegaard","Augustine","Aristotle"], a:"c"},
+  {q:"The famous phrase \"Cogito, ergo sum\" or \"I think, therefore I am\" is from which rationalist philosopher?", c:["John Locke","David Hume","Rene Descartes","Søren Kierkegaard"], a:"c"},
+  {q:"The idea that the mind (or soul) is entirely distinct from the body, known as Cartesian dualism, was proposed by:", c:["Aristotle","Rene Descartes","John Locke","Plato"], a:"b"},
+  {q:"Which empiricist philosopher argued that personal identity is defined by consciousness and memory?", c:["David Hume","Rene Descartes","John Locke","George Mead"], a:"c"},
+  {q:"The concept of \"tabula rasa,\" or the mind as a blank slate at birth, is associated with:", c:["John Locke","David Hume","Socrates","Plato"], a:"a"},
+  {q:"This empiricist philosopher proposed the \"Bundle Theory,\" suggesting the self is just a bundle of changing perceptions.", c:["Rene Descartes","John Locke","David Hume","Immanuel Kant"], a:"c"},
+  {q:"Who likened the mind to a theater where perceptions appear and disappear, with no constant \"self\" watching them?", c:["David Hume","Søren Kierkegaard","Martin Heidegger","Charles Horton Cooley"], a:"a"},
+  {q:"Which existentialist Christian thinker described the self as a task—something to be achieved through a process of becoming?", c:["Martin Heidegger","Søren Kierkegaard","Augustine","Aquinas"], a:"b"},
+  {q:"According to Søren Kierkegaard, true selfhood is found through a relationship with God, which requires a:", c:["Leap of faith","Social contract","Bundle of perceptions","State of despair"], a:"a"},
+  {q:"Kierkegaard described the self as a \"relation that relates itself to itself,\" a dynamic synthesis of:", c:["Finite and infinite","Body and soul","\"I\" and \"Me\"","Public and private"], a:"a"},
+  {q:"The concept of \"Dasein\" (being-there) as a way of existing, rather than a substance, was introduced by:", c:["Søren Kierkegaard","Martin Heidegger","George Mead","Rene Descartes"], a:"b"},
+  {q:"According to Heidegger, \"Authenticity\" means:", c:["Obeying social norms","Living for pleasure and avoiding responsibility","Taking ownership of your existence","Achieving a direct relationship with God"], a:"c"},
+  {q:"This sociologist believed that the self emerges from social interaction and the process of taking the role of the other.", c:["Charles Horton Cooley","Lev Vygotsky","George Mead","Richard Shweder"], a:"c"},
+  {q:"Who proposed the three stages of self-development: imitation, play, and game?", c:["George Mead","Charles Horton Cooley","Søren Kierkegaard","David Hume"], a:"a"},
+  {q:"The concept of the \"Looking-Glass Self\" was developed by which sociologist?", c:["George Mead","Charles Horton Cooley","Hans-Georg Gadamer","Lev Vygotsky"], a:"b"},
+  {q:"This social constructivist thinker emphasized that our understanding of ourselves is formed through language, symbols, and shared cultural meanings.", c:["Richard Shweder","Lev Vygotsky","George Mead","Charles Horton Cooley"], a:"b"},
+  {q:"Which psychologist argued that selfhood varies across cultures, with Western cultures emphasizing an independent self and Eastern cultures an interdependent self?", c:["Lev Vygotsky","Charles Horton Cooley","George Mead","Richard Shweder"], a:"d"},
+  {q:"This philosopher's hermeneutics suggests that we understand ourselves through cultural traditions and historical contexts.", c:["Hans-Georg Gadamer","Martin Heidegger","Søren Kierkegaard","David Hume"], a:"a"},
+  {q:"Who believed introspection reveals truth and that the self is a unity of body and soul seeking God?", c:["Aquinas","Plato","Augustine","Aristotle"], a:"c"},
+  {q:"The idea that the self is not innate but emerges through social interaction is a core philosophy of:", c:["Rene Descartes","John Locke","George Mead","Socrates"], a:"c"},
+  {q:"Which philosopher viewed the self as an illusion, with no permanent entity underlying our experiences?", c:["Plato","Rene Descartes","David Hume","Aristotle"], a:"c"},
+  {q:"The philosopher who saw the self as a rational being distinct and separate from the physical body was:", c:["Aristotle","Rene Descartes","David Hume","John Locke"], a:"b"},
+
+  // 31–50 (General concepts)
+  {q:"According to the slides, understanding the self is especially important for college students because it is a critical period of:", c:["Career advancement","Financial independence","Identity formation and personal growth","Social relaxation"], a:"c"},
+  {q:"The ability to make better choices and judgments is referred to as:", c:["Identity Development","Improved Decision-Making","Authentic Relationships","Emotional Resilience"], a:"b"},
+  {q:"In Kierkegaard's \"Stages of Life,\" the stage focused on living for pleasure and avoiding responsibility is the:", c:["Ethical Stage","Religious Stage","Authentic Stage","Aesthetic Stage"], a:"d"},
+  {q:"Heidegger's concept of \"Thrownness\" refers to the fact that we:", c:["Can envision and pursue any possibility","Do not choose the basic conditions of our life","Are never separate from the world","Must take a leap of faith"], a:"b"},
+  {q:"In George Mead's theory, the \"Me\" represents:", c:["The spontaneous and creative aspect of the self","The internalized social norms and expectations","The authentic self free from influence","The self in early childhood"], a:"b"},
+  {q:"The \"I\" in George Mead's theory is the component of the self that:", c:["Provides structure and predictability","Represents the viewpoint of the community","Responds to the \"Me\" and initiates new behavior","Is formed during the game stage"], a:"c"},
+  {q:"The \"generalized other\" refers to:", c:["A specific person we imitate, like a parent","The spontaneous aspect of the self","The internalized sense of the norms of the broader society","How we imagine others judge our appearance"], a:"c"},
+  {q:"The three steps of Cooley's \"Looking-Glass Self\" are imagination of appearance, imagination of judgment, and:", c:["Social interaction","Role-playing","Development of feelings about ourselves","Conforming to social norms"], a:"c"},
+  {q:"The version of yourself that you present to the outside world, especially in social situations, is the:", c:["Private Self","Collective Self","Public Self","Authentic Self"], a:"c"},
+  {q:"Your inner, personal identity, including thoughts and feelings you may not share openly, constitutes the:", c:["Public Self","Collective Self","Social Self","Private Self"], a:"d"},
+  {q:"The part of your identity tied to the groups or communities you belong to is known as the:", c:["Private Self","Collective Self","Public Self","Authentic Self"], a:"b"},
+  {q:"The shared beliefs, values, customs, and behaviors that characterize a group or society are referred to as:", c:["Self-concept","Social norms","Culture","Personal identity"], a:"c"},
+  {q:"Social Constructivism is the theory that the self is constructed through:", c:["A relationship with God","Introspection and self-examination","Social interactions and cultural contexts","A combination of appetitive, spirited, and rational parts"], a:"c"},
+  {q:"Confucian philosophy emphasizes that the self is relational and defined by:", c:["Memory and consciousness","Social roles and duties","Its capacity to reason","A leap of faith"], a:"b"},
+  {q:"According to Cultural Psychology, Western cultures tend to emphasize an:", c:["Interdependent self","Independent self","Relational self","Spiritual self"], a:"b"},
+  {q:"The idea that knowledge comes from sensory experience is known as:", c:["Rationalism","Existentialism","Empiricism","Dualism"], a:"c"},
+  {q:"The idea that reason is the chief source and test of knowledge is known as:", c:["Rationalism","Empiricism","Hermeneutics","Social Constructivism"], a:"a"},
+  {q:"In Kierkegaard's philosophy, \"Despair\" is the condition of:", c:["Not being oneself","Living in the aesthetic stage","Doubting everything","Lacking social interaction"], a:"a"},
+  {q:"The process of mentally putting oneself in another's position, which is central to Mead's theory, is called:", c:["Introspection","Role-playing","Symbolic interaction","Self-awareness"], a:"c"},
+  {q:"Heidegger’s concept of \"Being-in-the-World\" means that we are:", c:["Trapped in a physical body","A thinking substance separate from the world","A bundle of perceptions","Never separate from the world we exist in"], a:"d"},
+];
+
+/** QUIZ ENGINE **/
+const total = DATA.length;
+let i = 0;
+let score = 0;
+
+const elQ  = document.getElementById("qtext");
+const elC  = document.getElementById("choices");
+const elFb = document.getElementById("feedback");
+const elNext = document.getElementById("nextBtn");
+const elReveal = document.getElementById("revealBtn");
+
+const elCount = document.getElementById("count");
+const elTotal = document.getElementById("total");
+const elProg  = document.getElementById("progress");
+const elMini  = document.getElementById("miniScore");
+
+const endSection = document.getElementById("end");
+const quizSection = document.getElementById("quiz");
+const finalScore = document.getElementById("finalScore");
+const summary = document.getElementById("summary");
+const retryAll = document.getElementById("retryAll");
+
+elTotal.textContent = total;
+
+function letter(index){ return ["a","b","c","d"][index]; }
+function indexFromLetter(ch){ return {a:0,b:1,c:2,d:3}[ch]; }
+
+function render() {
+  const {q, c, a} = DATA[i];
+  elQ.textContent = `${i+1}. ${q}`;
+  elC.innerHTML = "";
+  elFb.textContent = "";
+  elFb.className = "feedback";
+  elCount.textContent = i+1;
+  elProg.style.width = `${(i)/total*100}%`;
+  elMini.textContent = `Score: ${score}`;
+
+  c.forEach((text, idx) => {
+    const btn = document.createElement("button");
+    btn.className = "choice";
+    btn.innerHTML = `<span class="label">${letter(idx)})</span> ${text}`;
+    btn.onclick = () => choose(idx, indexFromLetter(a));
+    elC.appendChild(btn);
+  });
+
+  elNext.disabled = true;
+}
+
+function disableChoices() {
+  [...elC.children].forEach(b => b.disabled = true);
+}
+
+function choose(selectedIdx, correctIdx) {
+  // mark all
+  [...elC.children].forEach((b, idx) => {
+    b.disabled = true;
+    if (idx === correctIdx) b.classList.add("correct");
+  });
+
+  const chosenBtn = elC.children[selectedIdx];
+  if (selectedIdx === correctIdx) {
+    elFb.textContent = "Correct!";
+    elFb.classList.add("correct");
+    score++;
+  } else {
+    chosenBtn.classList.add("wrong");
+    const correctText = DATA[i].c[correctIdx];
+    elFb.textContent = `Wrong. Correct answer: (${letter(correctIdx)}) ${correctText}`;
+    elFb.classList.add("wrong");
+  }
+  elMini.textContent = `Score: ${score}`;
+  elNext.disabled = false;
+}
+
+elReveal.addEventListener("click", () => {
+  // If already revealed/answered do nothing
+  if ([...elC.children].some(b => b.disabled)) return;
+  const correctIdx = indexFromLetter(DATA[i].a);
+  choose(correctIdx, correctIdx); // treat as picking the correct one
+});
+
+elNext.addEventListener("click", () => {
+  if (i < total - 1) {
+    i++;
+    render();
+  } else {
+    // finish
+    elProg.style.width = "100%";
+    quizSection.hidden = true;
+    endSection.hidden = false;
+    finalScore.textContent = `Final Score: ${score} / ${total}`;
+    const pct = Math.round((score/total)*100);
+    summary.textContent = `You answered ${score} correctly and ${total-score} incorrectly (${pct}%).`;
+  }
+});
+
+retryAll.addEventListener("click", () => {
+  i = 0; score = 0;
+  quizSection.hidden = false;
+  endSection.hidden = true;
+  render();
+});
+
+// Optional: shuffle questions for variety (comment out to keep fixed order)
+(function shuffle() {
+  for (let j = DATA.length - 1; j > 0; j--) {
+    const k = Math.floor(Math.random() * (j + 1));
+    [DATA[j], DATA[k]] = [DATA[k], DATA[j]];
+  }
+})();
+
+render();
+</script>
+</body>
+</html>
